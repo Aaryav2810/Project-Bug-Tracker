@@ -1,0 +1,54 @@
+mat-card {
+    margin: 7px;
+}
+
+mat-form-field {
+    margin-bottom: 12px;
+}
+
+mat-expansion-panel {
+    position: relative;
+    max-width: 400px;
+    text-align: center;
+    margin: auto;
+}
+
+mat-list {
+    max-width: 1000px;
+    position: relative;
+    margin: auto;
+}
+
+.dot {
+    height: 16px;
+    width: 16px;
+    background-color: whitesmoke;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.bg-blue {
+    background-color:#03b6fc;
+}
+
+.bg-green {
+    background-color: springgreen;
+}
+
+.action-container {
+    width: 175px;
+    min-width: 170px;
+    text-align: right;
+}
+
+@media (max-width: 535px) {
+    .action-container{
+        min-width: 100px;
+        max-width: 115px;
+        padding-left: 5px;
+    }
+    .pl-35 {
+        padding-left: 5px;
+    }
+}

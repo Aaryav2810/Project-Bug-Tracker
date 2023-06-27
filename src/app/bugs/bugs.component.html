@@ -1,0 +1,182 @@
+<p class="pl-35"><a routerLink="/projects" style="color: white;">Go back to Projects</a></p>
+
+<ng-container *ngIf='projectName'>
+  <h1 class="text-center">{{ projectName }}</h1>
+
+  <!-- ADD BUG INPUT FORM/ACCORDION -->
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Click Here to Add a New Bug
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <!-- Add bug Form Field -->
+      <form class="add-bug-form" role="form" name="form" (ngSubmit)="bugForm.form.valid && addBug(bugForm)"
+        #bugForm="ngForm">
+        <!-- TITLE -->
+        <mat-form-field appearance="fill">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="title" required minlength="3" maxlength="128" name="title" #titleField='ngModel'>
+          <mat-error *ngIf="titleField.errors && (titleField.dirty || titleField.touched)">
+            * Title must be between 3 and 128 characters
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <!-- DIFFICULTY -->
+        <mat-form-field appearance="fill">
+          <mat-label>Difficulty</mat-label>
+          <mat-select name='difficulty' [(ngModel)]="difficulty" required #difficultyField='ngModel'>
+            <mat-option value="easy">Easy</mat-option>
+            <mat-option value="medium">Medium</mat-option>
+            <mat-option value="hard">Hard</mat-option>
+          </mat-select>
+          <mat-error *ngIf="difficultyField.errors && (difficultyField.dirty || difficultyField.touched)">
+            * Difficulty is required
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <!-- DESRIPTION -->
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea name="description" [(ngModel)]="description" matInput required minlength="3" maxlength="300"
+            #descriptionField="ngModel"></textarea>
+          <mat-error *ngIf="descriptionField.errors && (descriptionField.dirty || descriptionField.touched)">
+            * Description must be between 3 and 300 characters
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <!-- COMPLETION STATUS -->
+        <mat-form-field appearance="fill">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="status" name="status" required #statusField='ngModel'>
+            <mat-option value="back-log">Back Log</mat-option>
+            <mat-option value="in-progress">In Progress</mat-option>
+            <mat-option value="completed">Completed</mat-option>
+          </mat-select>
+          <mat-error *ngIf="statusField.errors && (statusField.dirty || statusField.touched)">
+            * Status is required
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <!-- ADD BUG BUTTON -->
+        <button mat-fab color="accent" aria-label="add new bug" title='Add Bug' class="float-right" type="submit">
+          <mat-icon>add</mat-icon>
+        </button>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <!-- -------------------------------------------------- -->
+
+
+  <!-- BUGSLIST DISPLAY SECTION -->
+  <mat-list>
+    <!-- STATUS: BACK LOG -->
+    <mat-list-item><span class="dot"></span> Back Log </mat-list-item>
+    <!-- INDIVIDUAL BUG CARDS -->
+    <ng-container *ngFor='let bug of bugsList'>
+      <mat-card *ngIf="bug.status === 'back-log'">
+        <!-- TITLE -->
+        <div class="flex row">
+          <mat-card-subtitle class="spacer">{{bug.title | uppercase}}</mat-card-subtitle>
+          <!-- DIFFICULTY -->
+          <mat-chip-list>
+            <mat-chip [style.backgroundColor]="getDifficultyColor(bug.difficulty)">{{ bug.difficulty }}</mat-chip>
+          </mat-chip-list>
+        </div>
+        <!-- DESCRIPTION -->
+        <div class="flex row">
+          <mat-card-content class="spacer">
+            <p>{{bug.description}}</p>
+          </mat-card-content>
+          <!-- STATUS -->
+          <mat-card-actions class="action-container">
+            <select #status (input)="updateStatus(bug.id, status.value)">
+              <option value="" selected>Status</option>
+              <option value="back-log" disabled>Back Log</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+            <!-- DELETE -->
+            <button mat-icon-button color="warn" (click)="removeBug(bug.id)" title="Delete Bug">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </div>
+      </mat-card>
+    </ng-container>
+
+    <!-- IN PROGRESS -->
+    <mat-divider></mat-divider>
+    <!-- STATUS: IN PROGRESS -->
+    <mat-list-item><span class="dot bg-blue"></span>In Progress</mat-list-item>
+    <!-- INDIVIDUAL BUG CARDS -->
+    <ng-container *ngFor='let bug of bugsList'>
+      <mat-card *ngIf="bug.status === 'in-progress'">
+        <!-- TITLE -->
+        <div class="flex row">
+          <mat-card-subtitle class="spacer">{{bug.title | uppercase}}</mat-card-subtitle>
+          <!-- DIFFICULTY -->
+          <mat-chip-list>
+            <mat-chip [style.backgroundColor]="getDifficultyColor(bug.difficulty)">{{ bug.difficulty }}</mat-chip>
+          </mat-chip-list>
+        </div>
+        <!-- DESCRIPTION -->
+        <div class="flex row">
+          <mat-card-content class="spacer">
+            <p>{{bug.description}}</p>
+          </mat-card-content>
+          <!-- STATUS -->
+          <mat-card-actions class="action-container">
+            <select #status (input)="updateStatus(bug.id, status.value)">
+              <option value="" selected>Status</option>
+              <option value="back-log">Back Log</option>
+              <option value="in-progress" disabled>In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+            <!-- DELETE -->
+            <button mat-icon-button color="warn" (click)="removeBug(bug.id)" title="Delete Bug">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </div>
+      </mat-card>
+    </ng-container>
+    <mat-divider></mat-divider>
+    <!-- STATUS: COMPLETED -->
+    <mat-list-item><span class="dot bg-green"></span>Completed</mat-list-item>
+    <!-- INDIVIDUAL BUG CARDS -->
+    <ng-container *ngFor='let bug of bugsList'>
+      <mat-card *ngIf="bug.status === 'completed'">
+        <!-- TITLE -->
+        <div class="flex row">
+          <mat-card-subtitle class="spacer">{{bug.title | uppercase}}</mat-card-subtitle>
+          <!-- DIFFICULTY -->
+          <mat-chip-list>
+            <mat-chip [style.backgroundColor]="getDifficultyColor(bug.difficulty)">{{ bug.difficulty }}</mat-chip>
+          </mat-chip-list>
+        </div>
+        <!-- DESCRIPTION -->
+        <div class="flex row">
+          <mat-card-content class="spacer">
+            <p>{{bug.description}}</p>
+          </mat-card-content>
+          <!-- STATUS -->
+          <mat-card-actions class="action-container">
+            <select #status (input)="updateStatus(bug.id, status.value)">
+              <option value="" selected>Status</option>
+              <option value="back-log">Back Log</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed" disabled>Completed</option>
+            </select>
+            <!-- DELETE -->
+            <button mat-icon-button color="warn" (click)="removeBug(bug.id)" title="Delete Bug">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </div>
+      </mat-card>
+    </ng-container>
+  </mat-list>
+</ng-container>
+<h2 class="text-center" *ngIf="projectName == null">No Project Found</h2>

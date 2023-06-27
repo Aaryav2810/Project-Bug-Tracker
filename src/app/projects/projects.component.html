@@ -1,0 +1,38 @@
+<h1 class="text-center">Projects</h1>
+
+<!-- New Project Form -->
+<form class="input-form margin-auto mb-25" role="form" name="form" (ngSubmit)="projectForm.form.valid && addProject(projectForm)" 
+    #projectForm="ngForm">
+    <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Project Title</mat-label>
+        <input matInput [(ngModel)]="title" name='title' required minlength="3" maxlength="128" #titleField='ngModel'>
+        <mat-error *ngIf="titleField.errors && (titleField.dirty || titleField.touched)">
+            * Title must be between 3 and 128 characters
+        </mat-error>
+    </mat-form-field>
+    <br>
+    <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="description" name="description" matInput required minlength="3" maxlength="300" 
+            #descriptionField="ngModel"></textarea>
+        <mat-error *ngIf="descriptionField.errors && (descriptionField.dirty || descriptionField.touched)">
+            * Description must be between 3 and 300 characters
+        </mat-error>
+    </mat-form-field>
+    <br>
+    <button mat-raised-button color="primary" title='Add Project' type="submit" class="float-right mr-10">Add</button>
+</form>
+
+<!-- Project Card Displays -->
+<section class="proj-container">
+    <mat-card *ngFor="let project of projects" class="proj-card">
+        <mat-card-title>{{project.title}}</mat-card-title>
+        <mat-card-content>{{project.description}}</mat-card-content>
+        <!-- will redirect to the bugs page for that project-->
+        <button mat-raised-button color="accent" [routerLink]="'/projects/'+project.id">Bugs</button>
+
+        <button mat-icon-button (click)="removeProject(project.id)" style="float: right;">
+            <mat-icon (click)="removeProject(project.id)" color="warn">delete</mat-icon>
+        </button>
+    </mat-card>
+</section>

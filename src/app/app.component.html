@@ -1,0 +1,16 @@
+<mat-toolbar color="primary" class="mb-25">
+  <!-- Title -->
+  <span>Bug Tracker</span>
+  <span class="spacer"></span>
+
+  <!-- Welcome signed in user -->
+  <h2 *ngIf="auth.user | async" id="welcome-msg">
+    {{(auth.user | async)?.displayName}}</h2>
+  
+  <!-- Sign out button -->
+  <button mat-flat-button color="accent" *ngIf="auth.user | async" 
+    (click)="logout()" id="logout-button">Logout</button>
+</mat-toolbar>
+
+
+<router-outlet></router-outlet>

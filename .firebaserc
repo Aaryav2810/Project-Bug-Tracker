@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "bug-tracker-angular": {
+      "hosting": {
+        "bugTrackerAngularApp": [
+          "bug-tracker-angular"
+        ]
+      }
+    }
+  }
+}
